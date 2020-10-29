@@ -1,21 +1,21 @@
 module.exports = function transform(arr) {
-    if (!(arr instanceof Array)) throw new Error();
-    let retValue = [];
-    for (let  i = 0;i < arr.length; i++) {
-        if (arr[i] == '--discard-next') ++i;
-        else if (arr[i] == '--discard-prev'){
-            if (retValue.length > 0) retValue = retValue.slice(0, retValue.length - 1);
-        }
-        else if (arr[i] == '--double-next'){
-            if (++i < arr.length) {
-                retValue.push(arr[i]);
-                retValue.push(arr[i]);
-            }
-        }
-        else if (arr[i] == '--double-prev'){
-            if (i > 0) retValue.push(arr[i-1]);
-        }
-        else retValue.push(arr[i]);
+    if(arr.length == 0) return [];
+    if(!(Array.isArray(arr))) throw new Error(`${arr} is not array`);
+    let array = [];
+    for (let i = 0 ; i < arr.length; i++) {
+     if(arr[i] != '--discard-next' && arr[i] != '--discard-prev' && arr[i] != '--double-next' && arr[i] != '--double-prev') {
+        array.push(arr[i]);
+      }
+      if(arr[i-1] === '--discard-next') {
+        array.pop();
+        continue;
+      }
+      if (arr[i - 1] === "--double-next") array.push(arr[i]);
+      if(arr[i+1] === '--discard-prev') {
+        array.pop();
+        continue;
+      }
+      if (arr[i + 1] === "--double-prev") array.push(arr[i]);
     }
-    return retValue;
-};
+    return array;
+    };
